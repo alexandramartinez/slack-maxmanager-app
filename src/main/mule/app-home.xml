@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:os="http://www.mulesoft.org/schema/mule/os" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:slack="http://www.mulesoft.org/schema/mule/slack" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/slack http://www.mulesoft.org/schema/mule/slack/current/mule-slack.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/os http://www.mulesoft.org/schema/mule/os/current/mule-os.xsd">
+	<sub-flow name="app-home:generateHomePage" doc:id="42f7a896-c55f-43b3-9bb3-25081b304243" >
+		<set-variable value='#[payload.event.user default ""]' doc:name="userId" doc:id="570abcda-c625-47dc-af8d-199be75763ea" variableName="userId" />
+		<flow-ref doc:name="get tasks" doc:id="381b885a-4ea1-4172-b81b-50e279cee6b8" name="common:getUserTasks" />
+		<flow-ref doc:name="update home page" doc:id="9e3c9b95-b705-4d8a-b65d-77f9f6c4753b" name="app-home:updateHomePage" />
+	</sub-flow>
+	<sub-flow name="app-home:updateHomePage" doc:id="ad70ea92-2f04-4fcf-8b98-5d578050bf7b">
+		<ee:transform doc:name="create home page" doc:id="573c09c3-c6eb-48d3-81ad-130c58be6b79">
+			<ee:message>
+				<ee:set-payload resource="dw/create_home_page.dwl" />
+			</ee:message>
+		</ee:transform>
+		<http:request method="POST" doc:name="Slack views.publish" doc:id="bcd29802-9068-418c-b08f-034535776a43" config-ref="Slack_HTTP_Request_configuration" path="/views.publish">
+			<http:headers><![CDATA[#[output application/java
+---
+{
+	"Authorization" : "Bearer " ++ p('slack.token.bot')
+}]]]></http:headers>
+		</http:request>
+	</sub-flow>
+	<sub-flow name="app-home:saveModifiedTasks" doc:id="eadf000a-7898-46c1-99f2-f7ab97cd3518" >
+		<set-variable value='#[payload.user.id default ""]' doc:name="userId" doc:id="4a744574-b934-4405-8eee-dac2be7648b2" variableName="userId" />
+		<set-variable value='#[payload.actions["type"]]' doc:name="actionType" doc:id="86d5564f-5cc6-4fcd-a07c-8ac5aa4eb0df" variableName="actionType"/>
+		<choice doc:name="Choice" doc:id="c753d195-d88a-4f33-a5c5-f8b1e9830f57" >
+			<when expression='#[vars.actionType contains "checkboxes"]'>
+				<async doc:name="Async" doc:id="40edca99-08f5-48e2-97b3-4d90ec43b66e" >
+					<set-variable value='#[payload.actions filter $["type"] == "checkboxes"&#10;then $..value]' doc:name="checkedTasksIds" doc:id="2591e84d-560a-446d-a08f-684c648f624e" variableName="checkedTasksIds" />
+					<flow-ref doc:name="get tasks" doc:id="c4f12572-f23a-45bb-a5d9-f9a4c255c557" name="common:getUserTasks" />
+					<ee:transform doc:name="update modified tasks" doc:id="d51b3f3f-3921-4f3b-94d2-54ba8b64585a">
+					<ee:message>
+							<ee:set-payload resource="dw/update_tasks.dwl" />
+					</ee:message>
+				</ee:transform>
+					<flow-ref doc:name="save tasks" doc:id="a012d298-d2c1-4138-898c-16b2692facbe" name="common:saveTasks" />
+				</async>
+			</when>
+			<when expression='#[vars.actionType contains "button"]' >
+				<choice doc:name="Choice" doc:id="c062a5b0-4021-4357-a294-a15f6a6643c1" >
+					<when expression='#[payload.actions filter $["type"] == "button"&#10;then $.style contains "primary"]'>
+						<flow-ref doc:name="create modal" doc:id="b5763354-98b7-4671-8243-a29c371bb430" name="task-modal:createModal"/>
+					</when>
+					<otherwise >
+						<logger level="INFO" doc:name="Unimplemented choice" doc:id="097e6303-b9b1-47ba-b23d-f96d966002c2" message="Unimplemented choice" />
+					</otherwise>
+				</choice>
+			</when>
+			<otherwise >
+				<logger level="INFO" doc:name="Unimplemented choice" doc:id="ddf0ec09-7c1a-4987-a918-b266b0beb4c4" message="Unimplemented choice" />
+			</otherwise>
+		</choice>
+	</sub-flow>
+</mule>

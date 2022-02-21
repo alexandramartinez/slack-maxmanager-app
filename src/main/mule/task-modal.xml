@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:os="http://www.mulesoft.org/schema/mule/os"
+	xmlns:slack="http://www.mulesoft.org/schema/mule/slack" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/slack http://www.mulesoft.org/schema/mule/slack/current/mule-slack.xsd
+http://www.mulesoft.org/schema/mule/os http://www.mulesoft.org/schema/mule/os/current/mule-os.xsd">
+	<sub-flow name="task-modal:createModal" doc:id="6e1f93c2-265b-4512-9033-e8097a361e2f" >
+		<ee:transform doc:name="create modal" doc:id="6f4c51ff-1ddb-460f-8d39-3d512f42a2a7">
+			<ee:message>
+				<ee:set-payload resource="dw/create_modal.dwl" />
+			</ee:message>
+		</ee:transform>
+		<slack:open-view doc:name="Views - Open" doc:id="81178895-3003-4f1b-ad8f-e20f949d2074" config-ref="Slack_Config" view="#[payload.view]" triggerId="#[payload.trigger_id]" />
+		<ee:transform doc:name="ok response" doc:id="f42e5b27-c983-48b6-a25a-c3e0f44a9389" >
+			<ee:message >
+				<ee:set-payload resource="dw/ok_response.dwl" />
+			</ee:message>
+		</ee:transform>
+	</sub-flow>
+	<sub-flow name="task-modal:submitModal" doc:id="bc688b17-328d-4e15-ad2d-32a9af11896b" >
+		<set-variable value='#[payload.user.id default ""]' doc:name="userId" doc:id="47378d91-4220-4156-a0e8-c50c0d9b3a91" variableName="userId"/>
+		<set-variable value='#[payload.."plain_text_input-action"[0].value default ""]' doc:name="taskText" doc:id="8e896cbc-33fc-4d04-8ed4-fa86f1bf6649" variableName="taskText"/>
+		<set-variable value="#[payload.view.blocks.elements[0][0].text]" doc:name="messageLink" doc:id="6f85b56b-8422-461a-a7d1-88050032e6bd" variableName="messageLink"/>
+		<flow-ref doc:name="create task" doc:id="63f44645-20c0-41d7-9d7d-143f21c32d0e" name="common:createTask" />
+		<ee:transform doc:name="response" doc:id="d318c8f1-45c3-412e-8c2a-d0bc887ff329" >
+			<ee:message >
+				<ee:set-payload resource="dw/close_modal.dwl" />
+			</ee:message>
+		</ee:transform>
+	</sub-flow>	
+</mule>

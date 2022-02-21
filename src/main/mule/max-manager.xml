@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:slack="http://www.mulesoft.org/schema/mule/slack" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/slack http://www.mulesoft.org/schema/mule/slack/current/mule-slack.xsd">
+	<flow name="max-manager:interactive" doc:id="8cb94339-5410-47df-9277-cb666f305227" >
+		<http:listener doc:name="Listener" doc:id="69d0368a-47ad-4935-bec0-bb6e85c7a397" config-ref="HTTP_Listener_config" path="/interactive"/>
+		<flow-ref doc:name="initial config" doc:id="2d3c9de6-bbf4-4108-9624-ebcaae4ceeac" name="common:initialConfig"/>
+		<choice doc:name="Choice" doc:id="5051bf00-20ef-4743-b98b-262cf7cec3af" >
+			<when expression='#[vars.actionType == "message_action"]'>
+				<flow-ref doc:name="create modal" doc:id="b192c417-6ca0-4e54-b122-c5a4241b0686" name="task-modal:createModal"/>
+			</when>
+			<when expression='#[vars.actionType == "view_submission"]'>
+				<flow-ref doc:name="submit modal" doc:id="ca989b11-2160-4280-99ca-3b31b4919a35" name="task-modal:submitModal"/>
+			</when>
+			<when expression='#[vars.actionType == "block_actions"]'>
+				<flow-ref doc:name="save modified tasks" doc:id="f093a159-55b9-422d-bb1f-fe802f0a4a7e" name="app-home:saveModifiedTasks"/>
+			</when>
+			<otherwise >
+				<logger level="INFO" doc:name="Unimplemented choice" doc:id="49f4efb8-ea47-4f09-9e1a-d6f45861dd33" message="Unimplemented choice"/>
+			</otherwise>
+		</choice>
+	</flow>
+	<flow name="max-manager:events" doc:id="c53ce986-a849-497b-8637-20f7dca2eaea" >
+		<http:listener doc:name="Listener" doc:id="b98a1797-14f9-441f-931d-9ff852f2da9e" config-ref="HTTP_Listener_config" path="/events"/>
+		<flow-ref doc:name="initial config" doc:id="17d97b9b-4be1-407b-8a9c-3c93aae0e5c7" name="common:initialConfig"/>
+		<choice doc:name="Choice" doc:id="2e4b53f0-b32f-4164-99ce-d64964af37fd" >
+			<when expression='#[vars.actionType == "app_home_opened"]'>
+				<flow-ref doc:name="generate home page" doc:id="d4ed0f24-9632-4cd9-828f-d323997c0f29" name="app-home:generateHomePage"/>
+			</when>
+			<otherwise >
+				<logger level="INFO" doc:name="Unimplemented choice" doc:id="8df0f007-b311-49c9-b1b2-179894d8439f" message="Unimplemented choice"/>
+			</otherwise>
+		</choice>
+	</flow>
+	<flow name="max-manager:slash" doc:id="95ce7dfd-f16a-4c8f-a285-43b4327c9628" >
+		<http:listener doc:name="Listener" doc:id="40372b4d-8048-40f4-b033-2eca86ea0923" config-ref="HTTP_Listener_config" path="/slash"/>
+		<flow-ref doc:name="initial config" doc:id="0aa562a2-326f-4c56-bea6-b2e0ddebd1d7" name="common:initialConfig"/>
+		<choice doc:name="Choice" doc:id="7e08dbaa-27fb-45ce-807b-d4479e712da0" >
+			<when expression='#[vars.actionType == "/createtask"]'>
+				<flow-ref doc:name="process command" doc:id="a2c088bd-87d9-4000-9696-f45c4c8f6103" name="slash-command:processCommand" />
+			</when>
+			<otherwise >
+				<logger level="INFO" doc:name="Unimplemented choice" doc:id="75fbd18b-1a50-4903-b7b8-04e266915c52" message="Unimplemented choice"/>
+			</otherwise>
+		</choice>
+	</flow>
+</mule>

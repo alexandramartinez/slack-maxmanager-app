@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:os="http://www.mulesoft.org/schema/mule/os"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/os http://www.mulesoft.org/schema/mule/os/current/mule-os.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<sub-flow name="common:initialConfig" doc:id="cd66bc6b-4b24-4144-9729-f21b65b23789" >
+		<ee:transform doc:name="payload to JSON and vars.actionType" doc:id="9dcbf017-5b15-41c7-9694-611ee5825d32" >
+			<ee:message >
+				<ee:set-payload resource="dw/payload_to_json.dwl" />
+			</ee:message>
+			<ee:variables >
+			</ee:variables>
+		</ee:transform>
+		<ee:transform doc:name="vars.actionType" doc:id="8e706ed2-33d9-4200-85e2-4654221bd02a" >
+			<ee:message >
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable resource="dw/actionType.dwl" variableName="actionType" />
+			</ee:variables>
+		</ee:transform>
+		<logger level="INFO" doc:name="print actionType" doc:id="92807e4d-fcff-453b-98d9-0843c45e9338" message='#["Action Type: " ++ (vars.actionType default "null")]'/>
+		<logger level="INFO" doc:name="print payload" doc:id="5c6f2140-764f-4074-b799-1565ca44f5e7" message="#[payload]"/>
+	</sub-flow>
+	<sub-flow name="common:getUserTasks" doc:id="3fad5eda-b238-4859-9c13-c73f98e8dd32">
+		<os:retrieve doc:name="get current user tasks" doc:id="b8abb83e-f0ad-46f0-b788-fc7ee5a747ac" key="#[vars.userId]" objectStore="Object_store">
+			<os:default-value><![CDATA[#[[
+	{
+		id: "task 0",
+		text: "Create your first task!",
+		selected: false,
+		link: ""
+	}
+]]]]></os:default-value>
+		</os:retrieve>
+	</sub-flow>
+	<sub-flow name="common:createTask" doc:id="d7705458-cb44-42e2-a650-402d08e1fcd9">
+		<os:retrieve doc:name="vars.counter" doc:id="6cf906b0-5f71-4f12-abf8-074d09500913" key="counter" objectStore="Object_store" target="counter">
+			<os:default-value><![CDATA[#[0]]]></os:default-value>
+		</os:retrieve>
+		<flow-ref doc:name="get user tasks" doc:id="6cc63cea-39db-4306-8c3a-f504157dead9" name="common:getUserTasks" />
+		<ee:transform doc:name="new tasks list" doc:id="6aff6977-c3f0-4816-8fef-c3b195077496">
+			<ee:message>
+				<ee:set-payload resource="dw/create_new_task_list.dwl" />
+			</ee:message>
+		</ee:transform>
+		<async doc:name="Async" doc:id="69a4a9d5-6a73-4a5c-90d0-9b4e9dd0e761">
+			<scatter-gather doc:name="Scatter-Gather" doc:id="2bb65557-d111-4be8-9395-d433fde54662">
+			<route>
+				<flow-ref doc:name="save tasks list" doc:id="85ffd956-eee0-4e03-86ac-ebe237bc55a0" name="common:saveTasks" />
+			</route>
+			<route>
+				<os:store doc:name="save new counter" doc:id="cbe393ac-038b-4692-81d7-ec5bc1efac82" key="counter" objectStore="Object_store">
+			<os:value><![CDATA[#[payload.counter]]]></os:value>
+		</os:store>
+			</route>
+				<route>
+					<flow-ref doc:name="update home page" doc:id="4b63961b-7930-4041-8265-8c5fafc33c8c" name="app-home:updateHomePage" />
+				</route>
+		</scatter-gather>
+		</async>
+	</sub-flow>
+	<sub-flow name="common:saveTasks" doc:id="3e1f43c9-6b50-432c-8ba6-e1192d27428e">
+		<os:store doc:name="save tasks list" doc:id="6ce2f7a9-b9f4-4275-bd46-2dbab309ae2d" key="#[vars.userId]" objectStore="Object_store">
+			<os:value><![CDATA[#[payload.tasksList]]]></os:value>
+		</os:store>
+	</sub-flow>
+</mule>

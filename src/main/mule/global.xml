@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:os="http://www.mulesoft.org/schema/mule/os"
+	xmlns:secure-properties="http://www.mulesoft.org/schema/mule/secure-properties" xmlns:slack="http://www.mulesoft.org/schema/mule/slack"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/slack http://www.mulesoft.org/schema/mule/slack/current/mule-slack.xsd
+http://www.mulesoft.org/schema/mule/secure-properties http://www.mulesoft.org/schema/mule/secure-properties/current/mule-secure-properties.xsd
+http://www.mulesoft.org/schema/mule/os http://www.mulesoft.org/schema/mule/os/current/mule-os.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="a870d915-220c-4772-afd0-0dde4c44cb98" >
+		<http:listener-connection host="${http.listener.host}" port="${http.listener.port}" />
+	</http:listener-config>
+	<slack:config name="Slack_Config" doc:name="Slack Config" doc:id="6ca07a60-c58c-4f0a-87fc-a72784ba69f6" >
+		<slack:token-connection token="${slack.token.bot}" />
+	</slack:config>
+	<configuration-properties doc:name="Configuration properties" doc:id="626c2e5b-bb7d-4f89-a755-2a5a62046bee" file="${env}.properties" />
+	<global-property doc:name="Global Property" doc:id="3b40dab5-1b3b-4d23-9f3c-162ec7d96159" name="env" value="dev" />
+	<http:request-config name="Slack_HTTP_Request_configuration" doc:name="HTTP Request configuration" doc:id="1988afe6-39af-4c03-8d28-f27a29c7d932" basePath="/api">
+		<http:request-connection protocol="HTTPS" host="slack.com" />
+	</http:request-config>
+	<os:object-store name="Object_store" doc:name="Object store" doc:id="0ed0efc5-7018-49e0-9a9e-a848d4a22c71" />
+</mule>

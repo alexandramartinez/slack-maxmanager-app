@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<sub-flow name="slash-command:processCommand" doc:id="6f1d03a9-05ce-4678-a1fa-60de846c1d4d" >
+		<set-variable value="#[payload.user_id]" doc:name="userId" doc:id="d4dcd6b5-e345-4fa6-8946-61f0628514e4" variableName="userId"/>
+		<set-variable value="#[payload.text]" doc:name="taskText" doc:id="7c518678-f7ac-415a-86c0-328726fed41f" variableName="taskText"/>
+		<choice doc:name="Choice" doc:id="55f9a721-7373-4ed9-ab89-201f102957bc" >
+			<when expression="#[not isEmpty(vars.taskText)]">
+				<flow-ref doc:name="create task" doc:id="b1b910c7-d8fc-4e47-935e-5a721a6b3878" name="common:createTask" />
+				<ee:transform doc:name="success response" doc:id="2a5e6fbd-e5c8-4c50-9c10-23f45d39e7e1">
+			<ee:message>
+						<ee:set-payload resource="dw/slash_success.dwl" />
+			</ee:message>
+		</ee:transform>
+			</when>
+			<otherwise >
+				<ee:transform doc:name="error response" doc:id="3f3a1707-8078-4995-8138-10b333b9ce0a" >
+					<ee:message >
+						<ee:set-payload resource="dw/slash_error.dwl" />
+					</ee:message>
+				</ee:transform>
+			</otherwise>
+		</choice>
+	</sub-flow>
+</mule>
