@@ -1,15 +1,17 @@
-# Max Manager app for Slack
+# Max Manager app en Slack
 
-Tutorials to install, config, and use this Mule app are pending to be created. However, if you were part of one of my presentations, you can find here the code that was demoed.
+Los tutoriales para instalar, configurar, y usar esta app de Mule aún no han sido creados. Si fuiste parte de una de mis presentaciones, aquí puedes encontrar el código que mostré en el demo.
 
-## Installation instructions (MuleSoft side)
+Este código en español fue presentado en el evento de [Women Who Code CONNECT Recharge 2022](https://hopin.com/events/connect-recharge-2022/registration) con el título de "Mejora tu productividad creando aplicaciones de Slack". Descarga la presentación [aquí](TODO).
 
-1. Download [Anypoint Studio](https://www.mulesoft.com/platform/studio)
-2. Clone this repo
-3. In Anypoint Studio, select `File` > `Import` > `Anypoint Studio` > `Anypoint Studio project from File System` and click Next
-4. Select the cloned repo in the Project Root field and make sure to uncheck the `Copy project into workspace` option
-5. Click on Finish
+## Instrucciones para importar la app (MuleSoft)
 
-## Contact
+1. Descarga e instala [Anypoint Studio](https://www.mulesoft.com/platform/studio) (el IDE de MuleSoft).
+2. Clona este repositorio.
+3. Desde Anypoint Studio, selecciona `File` > `Import` > `Anypoint Studio` > `Anypoint Studio project from File System` y dale click a **Next**.
+4. Selecciona el repositorio que clonaste en el campo de Project Root y asegúrate de quitar el check en `Copy project into workspace` para que no haga una copia del folder.
+5. Dale click a **Finish**.
 
-For additional questions, please reach out to me via [my website](https://www.alexandramartinez.world) or any of my social networks listed [here](https://www.alexandramartinez.world/links).
+## Contacto
+
+Para cualquier duda, por favor contáctame en [mi página web](https://www.alexandramartinez.world/contact) o en cualquiera de mis redes sociales listadas [aquí](https://www.alexandramartinez.world/links).
