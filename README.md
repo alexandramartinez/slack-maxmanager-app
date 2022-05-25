@@ -2,6 +2,9 @@
 
 Tutorials to install, config, and use this Mule app are pending to be created. However, if you were part of one of my presentations, you can find here the code that was demoed.
 
+> **Nota**
+> Para ver la versión en español de este repositorio, cambia de la rama `main` a `espanol`.
+
 ## Installation instructions (MuleSoft side)
 
 1. Download [Anypoint Studio](https://www.mulesoft.com/platform/studio)
