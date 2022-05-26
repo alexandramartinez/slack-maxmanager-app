@@ -2,7 +2,7 @@
 
 Los tutoriales para instalar, configurar, y usar esta app de Mule aún no han sido creados. Si fuiste parte de una de mis presentaciones, aquí puedes encontrar el código que mostré en el demo.
 
-Este código en español fue presentado en el evento de [Women Who Code CONNECT Recharge 2022](https://hopin.com/events/connect-recharge-2022/registration) con el título de "Mejora tu productividad creando aplicaciones de Slack". Descarga la presentación [aquí](TODO).
+Este código en español fue presentado en el evento de [Women Who Code CONNECT Recharge 2022](https://hopin.com/events/connect-recharge-2022/registration) con el título de "Mejora tu productividad creando aplicaciones de Slack". Descarga la presentación [aquí](https://www.slideshare.net/AlexandraNahomiMartn/mejora-tu-productividad-creando-aplicaciones-de-slack).
 
 ## Instrucciones para importar la app (MuleSoft)
 
