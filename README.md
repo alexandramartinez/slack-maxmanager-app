@@ -2,6 +2,8 @@
 
 Tutorials to install, config, and use this Mule app are pending to be created. However, if you were part of one of my presentations, you can find here the code that was demoed.
 
+Este código en español fue presentado en el evento de [Women Who Code CONNECT Recharge 2022](https://hopin.com/events/connect-recharge-2022/registration) con el título de "Mejora tu productividad creando aplicaciones de Slack". Descarga la presentación [aquí](https://www.slideshare.net/AlexandraNahomiMartn/mejora-tu-productividad-creando-aplicaciones-de-slack).
+
 > **Nota**
 > Para ver la versión en español de este repositorio, cambia de la rama `main` a `espanol`.
 
