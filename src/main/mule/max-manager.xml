@@ -7,7 +7,7 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
 http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
 http://www.mulesoft.org/schema/mule/slack http://www.mulesoft.org/schema/mule/slack/current/mule-slack.xsd">
 	<flow name="max-manager:interactive" doc:id="8cb94339-5410-47df-9277-cb666f305227" >
-		<http:listener doc:name="Listener" doc:id="69d0368a-47ad-4935-bec0-bb6e85c7a397" config-ref="HTTP_Listener_config" path="/interactive"/>
+		<http:listener doc:name="/interactive" doc:id="69d0368a-47ad-4935-bec0-bb6e85c7a397" config-ref="HTTP_Listener_config" path="/interactive"/>
 		<flow-ref doc:name="initial config" doc:id="2d3c9de6-bbf4-4108-9624-ebcaae4ceeac" name="common:initialConfig"/>
 		<choice doc:name="Choice" doc:id="5051bf00-20ef-4743-b98b-262cf7cec3af" >
 			<when expression='#[vars.actionType == "message_action"]'>
@@ -25,7 +25,7 @@ http://www.mulesoft.org/schema/mule/slack http://www.mulesoft.org/schema/mule/sl
 		</choice>
 	</flow>
 	<flow name="max-manager:events" doc:id="c53ce986-a849-497b-8637-20f7dca2eaea" >
-		<http:listener doc:name="Listener" doc:id="b98a1797-14f9-441f-931d-9ff852f2da9e" config-ref="HTTP_Listener_config" path="/events"/>
+		<http:listener doc:name="/events" doc:id="b98a1797-14f9-441f-931d-9ff852f2da9e" config-ref="HTTP_Listener_config" path="/events"/>
 		<flow-ref doc:name="initial config" doc:id="17d97b9b-4be1-407b-8a9c-3c93aae0e5c7" name="common:initialConfig"/>
 		<choice doc:name="Choice" doc:id="2e4b53f0-b32f-4164-99ce-d64964af37fd" >
 			<when expression='#[vars.actionType == "app_home_opened"]'>
@@ -37,7 +37,7 @@ http://www.mulesoft.org/schema/mule/slack http://www.mulesoft.org/schema/mule/sl
 		</choice>
 	</flow>
 	<flow name="max-manager:slash" doc:id="95ce7dfd-f16a-4c8f-a285-43b4327c9628" >
-		<http:listener doc:name="Listener" doc:id="40372b4d-8048-40f4-b033-2eca86ea0923" config-ref="HTTP_Listener_config" path="/slash"/>
+		<http:listener doc:name="/slash" doc:id="40372b4d-8048-40f4-b033-2eca86ea0923" config-ref="HTTP_Listener_config" path="/slash"/>
 		<flow-ref doc:name="initial config" doc:id="0aa562a2-326f-4c56-bea6-b2e0ddebd1d7" name="common:initialConfig"/>
 		<choice doc:name="Choice" doc:id="7e08dbaa-27fb-45ce-807b-d4479e712da0" >
 			<when expression='#[vars.actionType == "/createtask"]'>
